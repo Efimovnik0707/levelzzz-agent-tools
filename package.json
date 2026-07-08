@@ -1,0 +1,31 @@
+{
+  "name": "ascend-mcp",
+  "version": "0.1.0",
+  "description": "MCP-сервер Ascend: агент отмечает твои задачи, добавляет новые и смотрит прогресс через API Ascend.",
+  "type": "module",
+  "bin": {
+    "ascend-mcp": "dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepare": "tsc"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.9.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Efimovnik0707/ascend-agent-tools.git"
+  },
+  "license": "MIT"
+}
