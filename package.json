@@ -23,9 +23,6 @@
   "engines": {
     "node": ">=18"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Efimovnik0707/ascend-agent-tools.git"
-  },
+  "repository": "https://github.com/Efimovnik0707/ascend-agent-tools.git",
   "license": "MIT"
 }

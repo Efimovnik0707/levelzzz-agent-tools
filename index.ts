@@ -12,7 +12,11 @@ import {
 
 const VERSION = "0.1.0";
 
-const apiUrl = (process.env.ASCEND_API_URL || "http://localhost:3000").replace(/\/+$/, "");
+// Дефолт: прод Ascend — пользователю достаточно одного ключа. ASCEND_API_URL
+// остаётся переопределением (self-host, локальная разработка); при смене
+// домена прода меняем дефолт здесь и в публичном репо.
+const DEFAULT_API_URL = "https://ascend-teal-nine.vercel.app";
+const apiUrl = (process.env.ASCEND_API_URL || DEFAULT_API_URL).replace(/\/+$/, "");
 const apiKey = process.env.ASCEND_API_KEY;
 if (!apiKey) {
   console.error(

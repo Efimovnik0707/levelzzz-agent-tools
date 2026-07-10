@@ -33,8 +33,11 @@ API-ключ Ascend (`asc_...`) даёт доступ к твоему аккау
 /plugin install ascend
 ```
 
-При установке Claude Code спросит переменные окружения `ASCEND_API_URL` и
-`ASCEND_API_KEY` — укажи URL сервера Ascend и ключ из профиля.
+При включении плагина Claude Code сам спросит «Ascend API key»: вставь
+ключ из профиля (ввод маскируется, ключ хранится в системном keychain).
+Адрес сервера указывать не нужно: по умолчанию плагин ходит на
+https://ascend-teal-nine.vercel.app. Переменная `ASCEND_API_URL` нужна
+только для self-host или локальной разработки.
 
 ### Путь 2: любой MCP-клиент
 
@@ -47,7 +50,6 @@ API-ключ Ascend (`asc_...`) даёт доступ к твоему аккау
       "command": "npx",
       "args": ["-y", "github:Efimovnik0707/ascend-agent-tools"],
       "env": {
-        "ASCEND_API_URL": "https://<твой-ascend-url>",
         "ASCEND_API_KEY": "asc_..."
       }
     }
