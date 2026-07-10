@@ -7,7 +7,8 @@ MCP-инструменты для агентов (Claude Code и любых др
 ## Что внутри
 
 - `mcp/` — stdio MCP-сервер `ascend-mcp` (один файл, `@modelcontextprotocol/sdk`).
-  Инструменты: `list_tasks`, `complete_task`, `add_task`, `get_progress`.
+  Инструменты: `list_tasks`, `complete_task`, `add_task`, `get_progress`,
+  `delete_task`, `update_task`, `get_profile`, `get_guild`, `get_history`.
 - `plugin/` — плагин Claude Code (marketplace + MCP-конфиг + skill с триггерами).
 
 ## Безопасность ключа
@@ -59,6 +60,8 @@ API-ключ Ascend (`asc_...`) даёт доступ к твоему аккау
 - «Я час вайбкодил свой проект — отметь задачу»
 - «Добавь задачу: 20 минут на растяжку, тир I, каждый день»
 - «Как там мой прогресс и босс гильдии?»
+- «Удали задачу про растяжку» / «Замени эту задачу на медитацию»
+- «Покажи мой профиль» / «Кто в моей гильдии» / «Что я делал на этой неделе»
 
 ## FAQ
 

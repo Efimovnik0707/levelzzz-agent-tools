@@ -30,7 +30,7 @@ interface ApiResponse {
   retryAfterSec: number | null;
 }
 
-async function request(method: "GET" | "POST", path: string, body?: unknown): Promise<ApiResponse> {
+async function request(method: "GET" | "POST" | "PATCH" | "DELETE", path: string, body?: unknown): Promise<ApiResponse> {
   const res = await fetch(`${apiUrl}${path}`, {
     method,
     headers: {
@@ -49,12 +49,13 @@ async function request(method: "GET" | "POST", path: string, body?: unknown): Pr
   };
 }
 
-// Мутации (complete/add_task): 429 -> подождать Retry-After (HTTP-заголовок) и повторить один раз (G-RV4).
-async function mutate(path: string, body: unknown): Promise<ApiResponse> {
-  const first = await request("POST", path, body);
+// Мутации (complete/add_task/delete_task/update_task): 429 -> подождать Retry-After
+// (HTTP-заголовок) и повторить один раз (G-RV4).
+async function mutate(path: string, body: unknown, method: "POST" | "PATCH" | "DELETE" = "POST"): Promise<ApiResponse> {
+  const first = await request(method, path, body);
   if (first.status !== 429) return first;
   await new Promise((resolve) => setTimeout(resolve, (first.retryAfterSec ?? 2) * 1000));
-  return request("POST", path, body);
+  return request(method, path, body);
 }
 
 // --- Форматирование ---------------------------------------------------------
@@ -172,6 +173,96 @@ async function getProgress(): Promise<CallToolResult> {
   return ok(lines.join("\n"));
 }
 
+async function deleteTask(args: { contract_task_id?: string }): Promise<CallToolResult> {
+  if (!args.contract_task_id) return fail("Нужен contract_task_id (см. list_tasks).");
+  const res = await mutate(`/api/agent/v1/tasks/${args.contract_task_id}`, undefined, "DELETE");
+  if (res.status === 409) return fail("У задачи уже есть выполнение на этой неделе — удалять нельзя, используй замену (update_task).");
+  if (res.status !== 200) return fail(errorText(res.status, res.body));
+  return ok("Задача удалена.");
+}
+
+async function updateTask(args: {
+  contract_task_id?: string;
+  title?: string;
+  tier?: number;
+  schedule_type?: string;
+  schedule_count?: number;
+  preset_id?: string;
+}): Promise<CallToolResult> {
+  if (!args.contract_task_id) return fail("Нужен contract_task_id (см. list_tasks).");
+  if (!args.preset_id && !args.title?.trim()) return fail("Нужен либо preset_id, либо title.");
+  const { contract_task_id, ...body } = args;
+  const res = await mutate(`/api/agent/v1/tasks/${contract_task_id}`, body, "PATCH");
+  if (res.status !== 200) return fail(errorText(res.status, res.body));
+  const charged = Number(res.body.charged ?? 0);
+  return ok(`Задача обновлена${charged > 0 ? ` (списано ${charged} кристаллов)` : " (бесплатно)"}.`);
+}
+
+async function getProfile(): Promise<CallToolResult> {
+  const res = await request("GET", "/api/agent/v1/profile");
+  if (res.status !== 200) return fail(errorText(res.status, res.body));
+  const b = res.body;
+  const lines: string[] = [];
+  lines.push(`${b.handle} (${b.display_name}) — уровень ${b.level} (${b.title}), ранг ${b.rank}.`);
+  lines.push(`XP всего: ${b.total_xp}, до следующего уровня: ${b.xp}/${b.xp_to_next}.`);
+  lines.push(`Стрик: ${b.streak} дней (×${b.streak_mult}). Кристаллы: ${b.crystals}.`);
+  return ok(lines.join("\n"));
+}
+
+interface GuildMemberRow {
+  handle: string;
+  level: number;
+  role: string;
+}
+
+async function getGuild(): Promise<CallToolResult> {
+  const res = await request("GET", "/api/agent/v1/guild");
+  if (res.status !== 200) return fail(errorText(res.status, res.body));
+  const b = res.body;
+  if (!b.in_guild) return ok("Ты не состоишь в гильдии.");
+  const lines: string[] = [];
+  lines.push(`Гильдия «${b.name}». Код приглашения: ${b.invite_code ?? "нет"}.`);
+  const members = (b.members as GuildMemberRow[]) ?? [];
+  if (members.length > 0) {
+    lines.push(
+      "Состав: " + members.map((m) => `${m.handle} (ур. ${m.level}${m.role === "owner" ? ", глава" : ""})`).join(", ")
+    );
+  }
+  const boss = b.boss as { name: string; current_hp: number; max_hp: number; days_left: number } | null;
+  if (boss) {
+    lines.push(`Босс недели: ${boss.name} — ${Math.round(boss.current_hp)}/${Math.round(boss.max_hp)} HP, осталось ${boss.days_left} дн.`);
+  }
+  return ok(lines.join("\n"));
+}
+
+interface HistoryEntry {
+  type: "completion" | "boss_kill";
+  date: string;
+  title?: string;
+  tier?: number;
+  xp_gained?: number;
+  damage?: number;
+  source?: string;
+  name?: string;
+  scope?: string;
+}
+
+async function getHistory(args: { limit?: number }): Promise<CallToolResult> {
+  const qs = args.limit ? `?limit=${encodeURIComponent(String(args.limit))}` : "";
+  const res = await request("GET", `/api/agent/v1/history${qs}`);
+  if (res.status !== 200) return fail(errorText(res.status, res.body));
+  const items = (res.body.history as HistoryEntry[]) ?? [];
+  if (items.length === 0) return ok("История пуста.");
+  const lines = items.map((h) => {
+    if (h.type === "boss_kill") {
+      const scopeLabel = h.scope === "guild" ? "гильдейский" : "соло";
+      return `${h.date}: повержен ${scopeLabel} босс «${h.name}»`;
+    }
+    return `${h.date}: ${tierLabel(h.tier)} · ${h.title} — +${h.xp_gained ?? 0} XP${(h.damage ?? 0) > 0 ? `, урон ${h.damage}` : ""} (${h.source})`;
+  });
+  return ok(lines.join("\n"));
+}
+
 // --- Сервер -------------------------------------------------------------
 
 const server = new Server({ name: "ascend-mcp", version: VERSION }, { capabilities: { tools: {} } });
@@ -215,6 +306,56 @@ const TOOLS: Tool[] = [
     description: "Прогресс игрока Ascend: уровень, XP, стрик, боссы, позиция в лиге.",
     inputSchema: { type: "object", properties: {}, additionalProperties: false },
   },
+  {
+    name: "delete_task",
+    description: "Удалить задачу из контракта Ascend. Нельзя, если по ней уже есть выполнение на этой неделе (см. update_task вместо этого).",
+    inputSchema: {
+      type: "object",
+      properties: {
+        contract_task_id: { type: "string", description: "id задачи из list_tasks" },
+      },
+      required: ["contract_task_id"],
+      additionalProperties: false,
+    },
+  },
+  {
+    name: "update_task",
+    description: "Заменить задачу контракта Ascend (название/тир/расписание, либо пресет). Первая замена в неделю бесплатна, дальше платно и лимитировано — как в UI.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        contract_task_id: { type: "string", description: "id задачи из list_tasks" },
+        title: { type: "string" },
+        tier: { type: "integer", enum: [1, 2, 3] },
+        schedule_type: { type: "string", enum: ["daily", "weekly_n", "oneshot"] },
+        schedule_count: { type: "integer" },
+        preset_id: { type: "string" },
+      },
+      required: ["contract_task_id"],
+      additionalProperties: false,
+    },
+  },
+  {
+    name: "get_profile",
+    description: "Профиль персонажа Ascend: уровень, титул, XP, ранг, стрик, кристаллы, позывной.",
+    inputSchema: { type: "object", properties: {}, additionalProperties: false },
+  },
+  {
+    name: "get_guild",
+    description: "Гильдия игрока Ascend: название, код приглашения, состав, босс недели. Если не в гильдии — сообщает об этом.",
+    inputSchema: { type: "object", properties: {}, additionalProperties: false },
+  },
+  {
+    name: "get_history",
+    description: "История событий игрока Ascend: выполненные задачи и повергнутые боссы.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        limit: { type: "integer", description: "сколько записей вернуть (по умолчанию 20, максимум 50)" },
+      },
+      additionalProperties: false,
+    },
+  },
 ];
 
 server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: TOOLS }));
@@ -239,6 +380,25 @@ server.setRequestHandler(CallToolRequestSchema, async (req): Promise<CallToolRes
         );
       case "get_progress":
         return await getProgress();
+      case "delete_task":
+        return await deleteTask((args ?? {}) as { contract_task_id?: string });
+      case "update_task":
+        return await updateTask(
+          (args ?? {}) as {
+            contract_task_id?: string;
+            title?: string;
+            tier?: number;
+            schedule_type?: string;
+            schedule_count?: number;
+            preset_id?: string;
+          }
+        );
+      case "get_profile":
+        return await getProfile();
+      case "get_guild":
+        return await getGuild();
+      case "get_history":
+        return await getHistory((args ?? {}) as { limit?: number });
       default:
         return fail(`Неизвестный инструмент: ${name}`);
     }
