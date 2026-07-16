@@ -1,13 +1,13 @@
 {
-  "name": "ascend",
+  "name": "levelzzz",
   "owner": {
-    "name": "Ascend"
+    "name": "Levelzzz"
   },
   "plugins": [
     {
-      "name": "ascend",
+      "name": "levelzzz",
       "source": "./",
-      "description": "Отмечай задачи Ascend, добавляй новые и смотри прогресс и боссов прямо из чата с агентом."
+      "description": "Отмечай задачи Levelzzz, добавляй новые и смотри прогресс и боссов прямо из чата с агентом."
     }
   ]
 }

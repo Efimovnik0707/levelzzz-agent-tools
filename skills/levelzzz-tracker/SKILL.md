@@ -1,11 +1,11 @@
 ---
-name: ascend-tracker
-description: Использовать, когда юзер говорит о выполнении своих задач/привычек Ascend ("сделал X", "закончил X", "отметь Y"), просит добавить/удалить/заменить задачу в контракте, или спрашивает про свой прогресс/уровень/профиль/гильдию/историю в Ascend. Требует настроенного MCP-сервера ascend (env ASCEND_API_KEY; адрес сервера по умолчанию прод Ascend).
+name: levelzzz-tracker
+description: Использовать, когда юзер говорит о выполнении своих задач/привычек Levelzzz ("сделал X", "закончил X", "отметь Y"), просит добавить/удалить/заменить задачу в контракте, или спрашивает про свой прогресс/уровень/профиль/гильдию/историю в Levelzzz. Требует настроенного MCP-сервера levelzzz (env LEVELZZZ_API_KEY; адрес сервера по умолчанию прод Levelzzz).
 ---
 
-# Ascend Tracker
+# Levelzzz Tracker
 
-Инструменты MCP-сервера `ascend`: `list_tasks`, `complete_task`, `add_task`,
+Инструменты MCP-сервера `levelzzz`: `list_tasks`, `complete_task`, `add_task`,
 `delete_task`, `update_task`, `get_progress`, `get_profile`, `get_guild`,
 `get_history`.
 

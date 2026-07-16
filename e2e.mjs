@@ -1,23 +1,23 @@
 // E2E goal 5 (G4.1): реальный прогон MCP-инструментов против dev-сервера.
-// Запуск: node e2e.mjs  (env ASCEND_API_URL + ASCEND_API_KEY обязательны).
+// Запуск: node e2e.mjs  (env LEVELZZZ_API_URL + LEVELZZZ_API_KEY обязательны).
 // Ключ НЕ печатается. Скрипт: list_tasks → complete_task(первая невыполненная)
 // → повторный complete_task (ожидаем «уже отмечена») → get_progress.
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 
-const url = process.env.ASCEND_API_URL;
-const key = process.env.ASCEND_API_KEY;
+const url = process.env.LEVELZZZ_API_URL;
+const key = process.env.LEVELZZZ_API_KEY;
 if (!url || !key) {
-  console.error("[e2e] нужны ASCEND_API_URL и ASCEND_API_KEY");
+  console.error("[e2e] нужны LEVELZZZ_API_URL и LEVELZZZ_API_KEY");
   process.exit(1);
 }
 
 const transport = new StdioClientTransport({
   command: process.execPath,
   args: ["dist/index.js"],
-  env: { ...process.env, ASCEND_API_URL: url, ASCEND_API_KEY: key },
+  env: { ...process.env, LEVELZZZ_API_URL: url, LEVELZZZ_API_KEY: key },
 });
-const client = new Client({ name: "ascend-e2e", version: "0.0.1" });
+const client = new Client({ name: "levelzzz-e2e", version: "0.0.1" });
 await client.connect(transport);
 console.log("[e2e] handshake ok");
 

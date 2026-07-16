@@ -1,27 +1,27 @@
 {
-  "name": "ascend",
-  "version": "0.2.0",
-  "description": "MCP-инструменты Ascend: список задач, отметка выполнения, добавление задач и прогресс прямо из чата с агентом.",
-  "repository": "https://github.com/Efimovnik0707/ascend-agent-tools",
+  "name": "levelzzz",
+  "version": "0.3.0",
+  "description": "MCP-инструменты Levelzzz: список задач, отметка выполнения, добавление задач и прогресс прямо из чата с агентом.",
+  "repository": "https://github.com/Efimovnik0707/levelzzz-agent-tools",
   "skills": ["./skills"],
   "userConfig": {
     "api_key": {
       "type": "string",
-      "title": "Ascend API key",
-      "description": "Персональный ключ из профиля Ascend: Профиль → Агентский доступ → Создать",
+      "title": "Levelzzz API key",
+      "description": "Персональный ключ из профиля Levelzzz: Профиль → Агентский доступ → Создать",
       "sensitive": true,
       "required": true
     }
   },
   "mcpServers": {
-    "ascend": {
+    "levelzzz": {
       "command": "npx",
       "args": [
         "-y",
-        "github:Efimovnik0707/ascend-agent-tools"
+        "github:Efimovnik0707/levelzzz-agent-tools"
       ],
       "env": {
-        "ASCEND_API_KEY": "${user_config.api_key}"
+        "LEVELZZZ_API_KEY": "${user_config.api_key}"
       }
     }
   }

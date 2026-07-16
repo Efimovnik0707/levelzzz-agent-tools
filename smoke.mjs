@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-// Локальный smoke-тест ascend-mcp: собирает пакет, поднимает сервер как child
-// stdio-процесс, делает MCP-хендшейк, проверяет регистрацию 4 tools и вызывает
+// Локальный smoke-тест levelzzz-mcp: собирает пакет, поднимает сервер как child
+// stdio-процесс, делает MCP-хендшейк, проверяет регистрацию всех 9 tools и вызывает
 // list_tasks с фейковым ключом против недостижимого API (localhost:9) — сервер
 // должен вернуть аккуратную текстовую ошибку, а не упасть.
 import { execSync } from "node:child_process";
@@ -22,19 +22,29 @@ const transport = new StdioClientTransport({
   args: [path.join(mcpDir, "dist", "index.js")],
   env: {
     ...process.env,
-    ASCEND_API_URL: "http://localhost:9",
-    ASCEND_API_KEY: NOT_A_REAL_KEY,
+    LEVELZZZ_API_URL: "http://localhost:9",
+    LEVELZZZ_API_KEY: NOT_A_REAL_KEY,
   },
 });
 
-const client = new Client({ name: "ascend-mcp-smoke", version: "0.0.0" }, { capabilities: {} });
+const client = new Client({ name: "levelzzz-mcp-smoke", version: "0.0.0" }, { capabilities: {} });
 
 await client.connect(transport);
 console.log("[smoke] handshake ok");
 
 const { tools } = await client.listTools();
 const names = tools.map((t) => t.name).sort();
-const expected = ["add_task", "complete_task", "get_progress", "list_tasks"];
+const expected = [
+  "add_task",
+  "complete_task",
+  "delete_task",
+  "get_guild",
+  "get_history",
+  "get_profile",
+  "get_progress",
+  "list_tasks",
+  "update_task",
+];
 if (names.length !== expected.length || !expected.every((n) => names.includes(n))) {
   throw new Error(`unexpected tool set: ${names.join(", ")}`);
 }

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Ascend agent-tools: один файл, stdio MCP-сервер, без фреймворков поверх SDK.
+// Levelzzz agent-tools: один файл, stdio MCP-сервер, без фреймворков поверх SDK.
 // stdout зарезервирован под JSON-RPC — всё логирование только через console.error.
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
@@ -10,18 +10,18 @@ import {
   type Tool,
 } from "@modelcontextprotocol/sdk/types.js";
 
-const VERSION = "0.1.0";
+const VERSION = "0.2.0";
 
-// Дефолт: прод Ascend — пользователю достаточно одного ключа. ASCEND_API_URL
+// Дефолт: прод Levelzzz — пользователю достаточно одного ключа. LEVELZZZ_API_URL
 // остаётся переопределением (self-host, локальная разработка); при смене
 // домена прода меняем дефолт здесь и в публичном репо.
-const DEFAULT_API_URL = "https://ascend-teal-nine.vercel.app";
-const apiUrl = (process.env.ASCEND_API_URL || DEFAULT_API_URL).replace(/\/+$/, "");
-const apiKey = process.env.ASCEND_API_KEY;
+const DEFAULT_API_URL = "https://levelzzz.com";
+const apiUrl = (process.env.LEVELZZZ_API_URL || DEFAULT_API_URL).replace(/\/+$/, "");
+const apiKey = process.env.LEVELZZZ_API_KEY;
 if (!apiKey) {
   console.error(
-    "[ascend-mcp] ASCEND_API_KEY не задан. Создай ключ в профиле Ascend " +
-      "(Профиль -> Агентский доступ -> Создать) и передай его в env ASCEND_API_KEY."
+    "[levelzzz-mcp] LEVELZZZ_API_KEY не задан. Создай ключ в профиле Levelzzz " +
+      "(Профиль -> Агентский доступ -> Создать) и передай его в env LEVELZZZ_API_KEY."
   );
   process.exit(1);
 }
@@ -68,12 +68,12 @@ const TIER_ROMAN: Record<number, string> = { 1: "I", 2: "II", 3: "III" };
 const tierLabel = (tier: unknown) => TIER_ROMAN[Number(tier)] ?? String(tier);
 
 function errorText(status: number, body: Record<string, unknown>): string {
-  if (status === 401) return "Ключ Ascend недействителен или отозван. Проверь ASCEND_API_KEY.";
+  if (status === 401) return "Ключ Levelzzz недействителен или отозван. Проверь LEVELZZZ_API_KEY.";
   if (status === 403) return "Это не твоя задача.";
   if (status === 404) return "Задача не найдена.";
-  if (status === 429) return "Ascend временно ограничивает частоту запросов, попробуй ещё раз через пару секунд.";
+  if (status === 429) return "Levelzzz временно ограничивает частоту запросов, попробуй ещё раз через пару секунд.";
   const msg = typeof body.error === "string" ? body.error : `HTTP ${status}`;
-  return `Ошибка Ascend: ${msg}`;
+  return `Ошибка Levelzzz: ${msg}`;
 }
 
 function ok(text: string): CallToolResult {
@@ -269,17 +269,17 @@ async function getHistory(args: { limit?: number }): Promise<CallToolResult> {
 
 // --- Сервер -------------------------------------------------------------
 
-const server = new Server({ name: "ascend-mcp", version: VERSION }, { capabilities: { tools: {} } });
+const server = new Server({ name: "levelzzz", version: VERSION }, { capabilities: { tools: {} } });
 
 const TOOLS: Tool[] = [
   {
     name: "list_tasks",
-    description: "Список задач сегодняшнего контракта Ascend (с отметкой, выполнена ли уже).",
+    description: "Список задач сегодняшнего контракта Levelzzz (с отметкой, выполнена ли уже).",
     inputSchema: { type: "object", properties: {}, additionalProperties: false },
   },
   {
     name: "complete_task",
-    description: "Отметить задачу Ascend выполненной. Требует contract_task_id из list_tasks.",
+    description: "Отметить задачу Levelzzz выполненной. Требует contract_task_id из list_tasks.",
     inputSchema: {
       type: "object",
       properties: {
@@ -292,7 +292,7 @@ const TOOLS: Tool[] = [
   },
   {
     name: "add_task",
-    description: "Добавить новую задачу в контракт Ascend. Либо preset_id, либо title+tier+schedule_type.",
+    description: "Добавить новую задачу в контракт Levelzzz. Либо preset_id, либо title+tier+schedule_type.",
     inputSchema: {
       type: "object",
       properties: {
@@ -307,12 +307,12 @@ const TOOLS: Tool[] = [
   },
   {
     name: "get_progress",
-    description: "Прогресс игрока Ascend: уровень, XP, стрик, боссы, позиция в лиге.",
+    description: "Прогресс игрока Levelzzz: уровень, XP, стрик, боссы, позиция в лиге.",
     inputSchema: { type: "object", properties: {}, additionalProperties: false },
   },
   {
     name: "delete_task",
-    description: "Удалить задачу из контракта Ascend. Нельзя, если по ней уже есть выполнение на этой неделе (см. update_task вместо этого).",
+    description: "Удалить задачу из контракта Levelzzz. Нельзя, если по ней уже есть выполнение на этой неделе (см. update_task вместо этого).",
     inputSchema: {
       type: "object",
       properties: {
@@ -324,7 +324,7 @@ const TOOLS: Tool[] = [
   },
   {
     name: "update_task",
-    description: "Заменить задачу контракта Ascend (название/тир/расписание, либо пресет). Первая замена в неделю бесплатна, дальше платно и лимитировано — как в UI.",
+    description: "Заменить задачу контракта Levelzzz (название/тир/расписание, либо пресет). Первая замена в неделю бесплатна, дальше платно и лимитировано — как в UI.",
     inputSchema: {
       type: "object",
       properties: {
@@ -341,17 +341,17 @@ const TOOLS: Tool[] = [
   },
   {
     name: "get_profile",
-    description: "Профиль персонажа Ascend: уровень, титул, XP, ранг, стрик, кристаллы, позывной.",
+    description: "Профиль персонажа Levelzzz: уровень, титул, XP, ранг, стрик, кристаллы, позывной.",
     inputSchema: { type: "object", properties: {}, additionalProperties: false },
   },
   {
     name: "get_guild",
-    description: "Гильдия игрока Ascend: название, код приглашения, состав, босс недели. Если не в гильдии — сообщает об этом.",
+    description: "Гильдия игрока Levelzzz: название, код приглашения, состав, босс недели. Если не в гильдии — сообщает об этом.",
     inputSchema: { type: "object", properties: {}, additionalProperties: false },
   },
   {
     name: "get_history",
-    description: "История событий игрока Ascend: выполненные задачи и повергнутые боссы.",
+    description: "История событий игрока Levelzzz: выполненные задачи и повергнутые боссы.",
     inputSchema: {
       type: "object",
       properties: {
@@ -407,7 +407,7 @@ server.setRequestHandler(CallToolRequestSchema, async (req): Promise<CallToolRes
         return fail(`Неизвестный инструмент: ${name}`);
     }
   } catch (err) {
-    return fail(`Не удалось связаться с Ascend (${apiUrl}): ${err instanceof Error ? err.message : String(err)}`);
+    return fail(`Не удалось связаться с Levelzzz (${apiUrl}): ${err instanceof Error ? err.message : String(err)}`);
   }
 });
 
