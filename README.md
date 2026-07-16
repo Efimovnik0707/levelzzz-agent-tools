@@ -17,8 +17,8 @@ MCP-инструменты Levelzzz для AI-агентов: агент сам 
 [levelzzz.com](https://levelzzz.com). Полный ключ показывается один раз,
 дальше виден только префикс. Отозвать можно там же в любой момент.
 
-[Add to Cursor](cursor://anysphere.cursor-deeplink/mcp/install?name=levelzzz&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsImdpdGh1YjpFZmltb3ZuaWswNzA3L2xldmVsenp6LWFnZW50LXRvb2xzIl0sImVudiI6eyJMRVZFTFpaWl9BUElfS0VZIjoiWU9VUl9LRVkifX0=) ·
-[Install in VS Code](vscode:mcp/install?%7B%22name%22%3A%22levelzzz%22%2C%22type%22%3A%22stdio%22%2C%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22github%3AEfimovnik0707%2Flevelzzz-agent-tools%22%5D%2C%22env%22%3A%7B%22LEVELZZZ_API_KEY%22%3A%22YOUR_KEY%22%7D%7D)
+[Add to Cursor](cursor://anysphere.cursor-deeplink/mcp/install?name=levelzzz&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIkBsZXZlbHp6ei9tY3AiXSwiZW52Ijp7IkxFVkVMWlpaX0FQSV9LRVkiOiJZT1VSX0tFWSJ9fQ==) ·
+[Install in VS Code](vscode:mcp/install?%7B%22name%22%3A%22levelzzz%22%2C%22type%22%3A%22stdio%22%2C%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22%40levelzzz%2Fmcp%22%5D%2C%22env%22%3A%7B%22LEVELZZZ_API_KEY%22%3A%22YOUR_KEY%22%7D%7D)
 
 После установки через кнопку замени `YOUR_KEY` на свой ключ: для Cursor в
 `.cursor/mcp.json` (проектный) или `~/.cursor/mcp.json` (глобальный), для
@@ -50,7 +50,7 @@ Desktop (`claude_desktop_config.json`) и других клиентов с кл�
   "mcpServers": {
     "levelzzz": {
       "command": "npx",
-      "args": ["-y", "github:Efimovnik0707/levelzzz-agent-tools"],
+      "args": ["-y", "@levelzzz/mcp"],
       "env": {
         "LEVELZZZ_API_KEY": "asc_..."
       }
@@ -66,7 +66,7 @@ Desktop (`claude_desktop_config.json`) и других клиентов с кл�
 ```toml
 [mcp_servers.levelzzz]
 command = "npx"
-args = ["-y", "github:Efimovnik0707/levelzzz-agent-tools"]
+args = ["-y", "@levelzzz/mcp"]
 
 [mcp_servers.levelzzz.env]
 LEVELZZZ_API_KEY = "asc_..."
@@ -75,7 +75,7 @@ LEVELZZZ_API_KEY = "asc_..."
 Или одной командой:
 
 ```
-codex mcp add levelzzz --env LEVELZZZ_API_KEY=asc_... -- npx -y github:Efimovnik0707/levelzzz-agent-tools
+codex mcp add levelzzz --env LEVELZZZ_API_KEY=asc_... -- npx -y @levelzzz/mcp
 ```
 
 ### Cursor (вручную)
@@ -93,7 +93,7 @@ codex mcp add levelzzz --env LEVELZZZ_API_KEY=asc_... -- npx -y github:Efimovnik
     "levelzzz": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "github:Efimovnik0707/levelzzz-agent-tools"],
+      "args": ["-y", "@levelzzz/mcp"],
       "env": {
         "LEVELZZZ_API_KEY": "asc_..."
       }
@@ -108,7 +108,7 @@ codex mcp add levelzzz --env LEVELZZZ_API_KEY=asc_... -- npx -y github:Efimovnik
 либо одной командой:
 
 ```
-gemini mcp add levelzzz npx -- -y github:Efimovnik0707/levelzzz-agent-tools
+gemini mcp add levelzzz npx -- -y @levelzzz/mcp
 ```
 
 ### Zed

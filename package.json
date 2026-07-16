@@ -3,7 +3,10 @@
   "version": "0.2.0",
   "description": "MCP-сервер Levelzzz: агент отмечает твои задачи, добавляет новые и смотрит прогресс через API Levelzzz.",
   "type": "module",
-  "repository": "https://github.com/Efimovnik0707/levelzzz-agent-tools.git",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Efimovnik0707/levelzzz-agent-tools.git"
+  },
   "mcpName": "io.github.efimovnik0707/levelzzz",
   "bin": {
     "levelzzz-mcp": "dist/index.js"

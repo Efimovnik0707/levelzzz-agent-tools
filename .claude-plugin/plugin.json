@@ -18,7 +18,7 @@
       "command": "npx",
       "args": [
         "-y",
-        "github:Efimovnik0707/levelzzz-agent-tools"
+        "@levelzzz/mcp"
       ],
       "env": {
         "LEVELZZZ_API_KEY": "${user_config.api_key}"
