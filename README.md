@@ -31,14 +31,14 @@ from Profile -> Agent Access -> Create. The plugin provides both:
 
 ## Codex / ChatGPT
 
-For Codex Desktop, install the plugin so the agent gets the Levelzzz skill, then
-configure the MCP server with an explicit `LEVELZZZ_API_KEY` environment
-variable.
+Codex Desktop does not use Claude Code chat slash commands such as
+`/plugin marketplace add` or `/plugin install`. Do not tell Codex users to run
+those commands in chat.
 
-```text
-/plugin marketplace add Efimovnik0707/levelzzz-agent-tools
-/plugin install levelzzz
-```
+Use the Codex app plugin/marketplace UI when it is available so the agent gets
+the Levelzzz skill from this repository. The Codex marketplace entry is in
+`.agents/plugins/marketplace.json`, and the plugin bundle itself is in
+`plugin/`.
 
 Ask the user for the generated Levelzzz key, then add or update the MCP server:
 
@@ -46,7 +46,7 @@ Ask the user for the generated Levelzzz key, then add or update the MCP server:
 codex mcp add levelzzz --env LEVELZZZ_API_KEY=asc_... -- npx -y @levelzzz/mcp
 ```
 
-Equivalent manual MCP settings:
+Equivalent manual setup in Codex Settings -> MCP servers:
 
 - Command: `npx`
 - Arguments: `-y`, `@levelzzz/mcp`

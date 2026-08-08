@@ -46,9 +46,11 @@ Levelzzz: Профиль → Агентский доступ → Создать)
 
 1. Попросить пользователя создать ключ в Levelzzz: Профиль → Агентский доступ
    → Создать. Ключ выглядит как `asc_...`.
-2. Установить плагин, чтобы агент получил skill:
-   `/plugin marketplace add Efimovnik0707/levelzzz-agent-tools`, затем
-   `/plugin install levelzzz`.
+2. Не писать пользователю Claude Code slash-команды `/plugin marketplace add`
+   и `/plugin install`: в Codex Desktop такого chat-командного флоу может не
+   быть. Для получения skill использовать UI плагинов/маркетплейса Codex,
+   когда он доступен. Codex marketplace entry лежит в
+   `.agents/plugins/marketplace.json`, bundle плагина — в `plugin/`.
 3. Настроить MCP-сервер явно с env, чтобы он точно получил настоящий ключ:
    `codex mcp add levelzzz --env LEVELZZZ_API_KEY=<asc_...> -- npx -y @levelzzz/mcp`.
 4. Проверить подключение через `get_profile`; в ответе должны быть handle,
