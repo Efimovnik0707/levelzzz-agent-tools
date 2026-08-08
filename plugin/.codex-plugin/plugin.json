@@ -1,0 +1,33 @@
+{
+  "name": "levelzzz",
+  "version": "0.3.0",
+  "description": "Use Levelzzz tasks, progress, profile, guild, and history from ChatGPT and Codex workflows.",
+  "author": {
+    "name": "Levelzzz",
+    "url": "https://levelzzz.com"
+  },
+  "homepage": "https://levelzzz.com",
+  "repository": "https://github.com/Efimovnik0707/levelzzz-agent-tools",
+  "license": "MIT",
+  "keywords": ["levelzzz", "tasks", "habits", "mcp", "productivity"],
+  "skills": "./skills/",
+  "apps": "./.app.json",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Levelzzz",
+    "shortDescription": "Track Levelzzz tasks and progress from chat.",
+    "longDescription": "Levelzzz packages a workflow skill and MCP tools for listing tasks, marking completed work, adding or replacing tasks, and reading progress, profile, guild, and history data.",
+    "developerName": "Levelzzz",
+    "category": "Productivity",
+    "capabilities": ["Read", "Write"],
+    "websiteURL": "https://levelzzz.com",
+    "privacyPolicyURL": "https://levelzzz.com/legal/privacidad",
+    "termsOfServiceURL": "https://levelzzz.com/legal/condiciones",
+    "defaultPrompt": [
+      "Show my Levelzzz progress.",
+      "Mark my workout task done in Levelzzz.",
+      "Add a new Levelzzz task for today."
+    ],
+    "brandColor": "#0EA5E9"
+  }
+}

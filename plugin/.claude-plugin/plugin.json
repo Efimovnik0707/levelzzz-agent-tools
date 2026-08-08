@@ -1,0 +1,28 @@
+{
+  "name": "levelzzz",
+  "version": "0.3.0",
+  "description": "MCP-инструменты Levelzzz: список задач, отметка выполнения, добавление задач и прогресс прямо из чата с агентом.",
+  "repository": "https://github.com/Efimovnik0707/levelzzz-agent-tools",
+  "skills": ["./skills"],
+  "userConfig": {
+    "api_key": {
+      "type": "string",
+      "title": "Levelzzz API key",
+      "description": "Персональный ключ из профиля Levelzzz: Профиль → Агентский доступ → Создать",
+      "sensitive": true,
+      "required": true
+    }
+  },
+  "mcpServers": {
+    "levelzzz": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@levelzzz/mcp"
+      ],
+      "env": {
+        "LEVELZZZ_API_KEY": "${user_config.api_key}"
+      }
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "levelzzz",
+  "owner": {
+    "name": "Levelzzz"
+  },
+  "plugins": [
+    {
+      "name": "levelzzz",
+      "source": "./",
+      "description": "Отмечай задачи Levelzzz, добавляй новые и смотри прогресс и боссов прямо из чата с агентом."
+    }
+  ]
+}
