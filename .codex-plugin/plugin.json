@@ -1,0 +1,40 @@
+{
+  "name": "levelzzz",
+  "version": "0.3.0",
+  "description": "MCP tools and agent instructions for Levelzzz tasks, progress, profile, guild, and history.",
+  "author": {
+    "name": "Efimovnik0707",
+    "url": "https://github.com/Efimovnik0707"
+  },
+  "homepage": "https://levelzzz.com",
+  "repository": "https://github.com/Efimovnik0707/levelzzz-agent-tools",
+  "license": "MIT",
+  "keywords": [
+    "levelzzz",
+    "mcp",
+    "tasks",
+    "habits",
+    "productivity",
+    "gamification"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Levelzzz",
+    "shortDescription": "Track Levelzzz tasks and progress from Codex",
+    "longDescription": "Use Levelzzz MCP tools and agent instructions to list tasks, mark completions, manage the weekly contract, inspect progress, profile, guild, and history.",
+    "developerName": "Efimovnik0707",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://levelzzz.com",
+    "defaultPrompt": [
+      "Connect Levelzzz to my profile",
+      "Show my Levelzzz tasks",
+      "Mark a Levelzzz task complete"
+    ],
+    "brandColor": "#7C3AED"
+  }
+}
