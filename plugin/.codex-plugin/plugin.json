@@ -1,7 +1,7 @@
 {
   "name": "levelzzz",
   "version": "0.3.0",
-  "description": "Use Levelzzz tasks, progress, profile, guild, and history from ChatGPT and Codex workflows.",
+  "description": "Use Levelzzz tasks, progress, profile, guild, and history through a local plugin bundle and MCP tools.",
   "author": {
     "name": "Levelzzz",
     "url": "https://levelzzz.com"

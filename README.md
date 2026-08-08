@@ -3,36 +3,36 @@
 Levelzzz Agent Tools lets AI agents work with your Levelzzz tasks, progress,
 profile, guild, and history through the same Levelzzz API used by the web app.
 
-The repository publishes two compatible packages:
+The repository contains two compatible paths:
 
-- `plugin/`: the Codex plugin bundle with skill instructions, registered app
-  connection, and bundled MCP server configuration.
+- `plugin/`: an in-repo Codex plugin bundle prepared for local development and
+  private testing. Public ChatGPT/Codex installation is not available today.
 - repository root: the existing npm stdio MCP package and Claude Code plugin
   compatibility files.
 
-## Codex plugin
+## Codex bundle
 
-The Codex plugin bundle lives in `plugin/` and includes:
+The local Codex bundle lives in `plugin/` and includes:
 
 - `plugin/.codex-plugin/plugin.json`
 - `plugin/.app.json`
 - `plugin/.mcp.json`
 - `plugin/skills/levelzzz-tracker/SKILL.md`
 
-The app connection is registered as:
+The app connection metadata is registered as:
 
 ```text
 plugin_asdk_app_6a772ec1468c8191a5142b9d7e554760
 ```
 
-For local marketplace testing from the repository root:
+For local development/testing from the repository root:
 
 ```text
 codex plugin marketplace add .
 ```
 
-Then install the `Levelzzz` plugin from the `Levelzzz Local` marketplace in the
-Codex app.
+This is for private local testing only; it is not a public ChatGPT/Codex
+installation path.
 
 ## Claude Code
 
