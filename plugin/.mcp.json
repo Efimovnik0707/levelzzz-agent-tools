@@ -2,7 +2,10 @@
   "mcpServers": {
     "levelzzz": {
       "command": "npx",
-      "args": ["-y", "@levelzzz/mcp"]
+      "args": ["-y", "@levelzzz/mcp"],
+      "env": {
+        "LEVELZZZ_API_KEY": ""
+      }
     }
   }
 }
