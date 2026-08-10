@@ -95,6 +95,7 @@ Use these listing values unless the product owner explicitly changes the copy:
 | Plugin name | `Levelzzz` |
 | Category | `Productivity` |
 | Short description | `Turn completed tasks into XP, streaks, and boss progress from chat.` |
+| Long description | `Connect your Levelzzz account to manage tasks and review XP, streaks, guild activity, and weekly boss progress directly from ChatGPT and Codex.` |
 | Website | `https://levelzzz.com` |
 | Support | `https://levelzzz.com/contacto` |
 | Privacy policy | `https://levelzzz.com/legal/privacidad` |
@@ -102,6 +103,7 @@ Use these listing values unless the product owner explicitly changes the copy:
 | MCP Server URL | `https://levelzzz.com/mcp` |
 | MCP URL type | `Universal` / `Standard` |
 | Authentication | `OAuth` |
+| Custom UI | `None`; do not upload UI screenshots and no UI CSP is required. |
 
 Still required from the product owner before submission:
 
@@ -130,19 +132,27 @@ submission.
 
 1. **Prompt:** `Show my Levelzzz tasks for today and tell me which are done.`
    **Expected:** call `list_tasks`; return task titles, tiers, and completion
-   state without changing data.
+   state without changing data. **Result shape:** a task collection containing
+   `title`, `tier`, and `done_today`; internal IDs are retained only for tool
+   chaining.
 2. **Prompt:** `I finished my workout. Mark it done in Levelzzz.`
    **Expected:** call `list_tasks`, resolve exactly one workout task, then call
-   `complete_task`; return XP, boss damage, and current level.
+   `complete_task`; return XP, boss damage, and current level. **Result shape:**
+   a completion result containing `xp_gained`, `boss_damage`, and `new_level`,
+   plus any level-up or boss-kill flags produced by the fixture.
 3. **Prompt:** `Add a daily 15-minute meditation task as tier I.`
    **Expected:** call `add_task` with `title`, `tier=1`, and
-   `schedule_type=daily`; return a successful creation result.
+   `schedule_type=daily`; return a successful creation result. **Result shape:**
+   a success status and the created contract-task reference.
 4. **Prompt:** `Show my level progress, streak, and current boss HP.`
    **Expected:** call `get_progress`; return the fixture's level, XP to next
-   level, streak, and boss HP.
+   level, streak, and boss HP. **Result shape:** level and XP fields, streak
+   fields, and a boss collection with current and maximum HP.
 5. **Prompt:** `Who is in my guild and how is this week's boss doing?`
    **Expected:** call `get_guild`; return the fixture's guild members and boss
-   state without exposing unnecessary secrets or identifiers.
+   state without exposing unnecessary secrets or identifiers. **Result shape:**
+   guild name, member summaries, and weekly boss status; no invite code unless
+   the user explicitly asks for it.
 
 ### Negative
 
