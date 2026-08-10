@@ -16,7 +16,9 @@
   ],
   "scripts": {
     "build": "tsc",
-    "prepare": "tsc"
+    "check:bundle": "node check-bundle.mjs",
+    "prepare": "tsc",
+    "test": "npm run build && npm run check:bundle"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0"
@@ -26,7 +28,7 @@
     "typescript": "^5.9.0"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "license": "MIT"
 }

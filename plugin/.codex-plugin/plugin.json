@@ -1,7 +1,7 @@
 {
   "name": "levelzzz",
   "version": "0.3.0",
-  "description": "Use Levelzzz tasks, progress, profile, guild, and history through a local plugin bundle and MCP tools.",
+  "description": "Use Levelzzz tasks, progress, profile, guild, and history through a remote OAuth connection.",
   "author": {
     "name": "Levelzzz",
     "url": "https://levelzzz.com"
@@ -12,11 +12,10 @@
   "keywords": ["levelzzz", "tasks", "habits", "mcp", "productivity"],
   "skills": "./skills/",
   "apps": "./.app.json",
-  "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "Levelzzz",
     "shortDescription": "Track Levelzzz tasks and progress from chat.",
-    "longDescription": "Levelzzz packages a workflow skill and MCP tools for listing tasks, marking completed work, adding or replacing tasks, and reading progress, profile, guild, and history data.",
+    "longDescription": "Levelzzz packages a workflow skill and a remote OAuth connection for listing tasks, marking completed work, managing the weekly contract, and reading progress, profile, guild, and history data.",
     "developerName": "Levelzzz",
     "category": "Productivity",
     "capabilities": ["Read", "Write"],

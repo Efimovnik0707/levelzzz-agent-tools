@@ -44,14 +44,17 @@ Levelzzz: Профиль → Агентский доступ → Создать)
 
 Когда пользователь просит подключить Levelzzz в Codex/ChatGPT:
 
-1. Попросить пользователя создать ключ в Levelzzz: Профиль → Агентский доступ
-   → Создать. Ключ выглядит как `asc_...`.
+1. Для публичного плагина использовать каталог плагинов ChatGPT/Codex и OAuth
+   Levelzzz. В этом сценарии не просить API-ключ и не показывать его в чате.
+   Пока публичная версия не опубликована, использовать repo marketplace из
+   `.agents/plugins/marketplace.json`; bundle лежит в `plugin/` и подключает
+   remote MCP через `plugin/.app.json`.
 2. Не писать пользователю Claude Code slash-команды `/plugin marketplace add`
    и `/plugin install`: в Codex Desktop такого chat-командного флоу может не
-   быть. Для получения skill использовать UI плагинов/маркетплейса Codex,
-   когда он доступен. Codex marketplace entry лежит в
-   `.agents/plugins/marketplace.json`, bundle плагина — в `plugin/`.
-3. Настроить MCP-сервер явно с env, чтобы он точно получил настоящий ключ:
+   быть. Маркетплейс добавляется через Codex CLI, а сам плагин устанавливается
+   через UI ChatGPT/Codex.
+3. Только как fallback для локального stdio MCP попросить пользователя создать
+   ключ в Levelzzz: Профиль → Агентский доступ → Создать, затем настроить сервер:
    `codex mcp add levelzzz --env LEVELZZZ_API_KEY=<asc_...> -- npx -y @levelzzz/mcp`.
 4. Проверить подключение через `get_profile`; в ответе должны быть handle,
    уровень, ранг, стрик и кристаллы.
