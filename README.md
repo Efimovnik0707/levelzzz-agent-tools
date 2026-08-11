@@ -65,7 +65,8 @@ leave `${user_config.api_key}` or `YOUR_KEY` as the literal environment value.
 The `levelzzz` MCP server exposes:
 
 - `list_tasks`
-- `complete_task`
+- `complete_task` — accepts `proof_text` (20+ non-whitespace characters count as valid proof: +25% boss damage, and a tier III task without one is counted as tier II) and `share_proof`
+- `add_proof` — attach or replace the proof on a task already completed today, without un-completing it
 - `add_task`
 - `delete_task`
 - `update_task`

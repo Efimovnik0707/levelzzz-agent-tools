@@ -10,7 +10,7 @@ import {
   type Tool,
 } from "@modelcontextprotocol/sdk/types.js";
 
-const VERSION = "0.2.0";
+const VERSION = "0.3.0";
 
 // Дефолт: прод Levelzzz — пользователю достаточно одного ключа. LEVELZZZ_API_URL
 // остаётся переопределением (self-host, локальная разработка); при смене
@@ -107,11 +107,16 @@ async function listTasks(): Promise<CallToolResult> {
   return ok(lines.join("\n"));
 }
 
-async function completeTask(args: { contract_task_id?: string; proof_text?: string }): Promise<CallToolResult> {
+async function completeTask(args: {
+  contract_task_id?: string;
+  proof_text?: string;
+  share_proof?: boolean;
+}): Promise<CallToolResult> {
   if (!args.contract_task_id) return fail("Нужен contract_task_id (см. list_tasks).");
   const res = await mutate("/api/agent/v1/complete", {
     contract_task_id: args.contract_task_id,
     proof_text: args.proof_text,
+    share: args.share_proof === true,
   });
   if (res.status === 409) return ok("Уже отмечена сегодня.");
   if (res.status !== 200) return fail(errorText(res.status, res.body));
@@ -132,6 +137,27 @@ async function completeTask(args: { contract_task_id?: string; proof_text?: stri
   const achievements = (b.achievements_unlocked as string[]) ?? [];
   if (achievements.length > 0) text += `. Ачивки: ${achievements.join(", ")}`;
   return ok(text);
+}
+
+// Пруф на уже выполненной сегодня задаче: то же, что кнопка «Добавить пруф» в
+// вебе. Задача остаётся выполненной, пересчитываются валидность пруфа, тир и урон.
+async function addProof(args: { contract_task_id?: string; proof_text?: string; share?: boolean }): Promise<CallToolResult> {
+  if (!args.contract_task_id) return fail("Нужен contract_task_id (см. list_tasks).");
+  if (!args.proof_text || !args.proof_text.trim()) return fail("Нужен proof_text: что именно было сделано.");
+  const res = await mutate("/api/agent/v1/proof", {
+    contract_task_id: args.contract_task_id,
+    proof_text: args.proof_text,
+    share: args.share === true,
+  });
+  if (res.status === 409) return fail("Задача сегодня не отмечена выполненной — пруф крепится к выполнению.");
+  if (res.status !== 200) return fail(errorText(res.status, res.body));
+  const b = res.body;
+  const parts = [b.verified ? "Пруф записан и засчитан" : "Пруф записан, но короче 20 символов — как валидный не засчитан"];
+  const dmg = Number(b.boss_damage ?? 0);
+  if (dmg > 0) parts.push(`боссу −${dmg}`);
+  parts.push(`+${Number(b.xp_gained ?? 0)} XP`);
+  if (b.shared) parts.push("видно отряду");
+  return ok(parts.join(", ") + ".");
 }
 
 async function addTask(args: {
@@ -279,14 +305,39 @@ const TOOLS: Tool[] = [
   },
   {
     name: "complete_task",
-    description: "Отметить задачу Levelzzz выполненной. Требует contract_task_id из list_tasks.",
+    description:
+      "Отметить задачу Levelzzz выполненной. Требует contract_task_id из list_tasks. " +
+      "Если юзер рассказал, что именно сделал, ОБЯЗАТЕЛЬНО передать это в proof_text: пруф от " +
+      "20 непробельных символов даёт +25% урона боссу, а задача тира III без пруфа засчитывается " +
+      "как тир II. Пруф приватен, пока не передан share_proof.",
     inputSchema: {
       type: "object",
       properties: {
         contract_task_id: { type: "string", description: "id задачи из list_tasks" },
-        proof_text: { type: "string", description: "необязательное текстовое подтверждение" },
+        proof_text: {
+          type: "string",
+          description: "что именно сделано, словами юзера; от 20 непробельных символов считается валидным пруфом",
+        },
+        share_proof: { type: "boolean", description: "показать пруф в ленте отряда; только по явной просьбе юзера" },
       },
       required: ["contract_task_id"],
+      additionalProperties: false,
+    },
+  },
+  {
+    name: "add_proof",
+    description:
+      "Добавить или заменить пруф на задаче, которая СЕГОДНЯ уже отмечена выполненной (задача " +
+      "останется выполненной). Нужен, когда юзер рассказал детали уже после отметки: валидный пруф " +
+      "от 20 непробельных символов возвращает задаче тир III и даёт +25% урона боссу.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        contract_task_id: { type: "string", description: "id задачи из list_tasks (должна быть выполнена сегодня)" },
+        proof_text: { type: "string", description: "что именно сделано, словами юзера" },
+        share: { type: "boolean", description: "показать пруф в ленте отряда; по умолчанию нет" },
+      },
+      required: ["contract_task_id", "proof_text"],
       additionalProperties: false,
     },
   },
@@ -371,7 +422,11 @@ server.setRequestHandler(CallToolRequestSchema, async (req): Promise<CallToolRes
       case "list_tasks":
         return await listTasks();
       case "complete_task":
-        return await completeTask((args ?? {}) as { contract_task_id?: string; proof_text?: string });
+        return await completeTask(
+          (args ?? {}) as { contract_task_id?: string; proof_text?: string; share_proof?: boolean }
+        );
+      case "add_proof":
+        return await addProof((args ?? {}) as { contract_task_id?: string; proof_text?: string; share?: boolean });
       case "add_task":
         return await addTask(
           (args ?? {}) as {

@@ -7,8 +7,14 @@
 
 ## Инструменты
 
-`list_tasks`, `complete_task`, `add_task`, `delete_task`, `update_task`,
-`get_progress`, `get_profile`, `get_guild`, `get_history`.
+`list_tasks`, `complete_task`, `add_proof`, `add_task`, `delete_task`,
+`update_task`, `get_progress`, `get_profile`, `get_guild`, `get_history`.
+
+**Пруф.** Валидным считается описание от 20 непробельных символов: оно даёт
++25% урона боссу, а задача тира III без него засчитывается как тир II. Детали
+выполнения переносить в `proof_text` словами пользователя. Если детали пришли
+после отметки — `add_proof`, задача останется выполненной. В ленту отряда пруф
+уходит только по явной просьбе (`share_proof` / `share`).
 
 ## Когда звать инструменты
 
